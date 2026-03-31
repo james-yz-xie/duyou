@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tencent.wxcloudrun.dao.CheckInMapper">
+    
+    <resultMap id="BaseResultMap" type="com.tencent.wxcloudrun.model.CheckIn">
+        <id column="id" property="id"/>
+        <result column="habitId" property="habitId"/>
+        <result column="userId" property="userId"/>
+        <result column="checkDate" property="checkDate"/>
+        <result column="createdAt" property="createdAt"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, habitId, userId, checkDate, createdAt
+    </sql>
+    
+    <select id="findByHabitId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM check_ins
+        WHERE habitId = #{habitId}
+        ORDER BY checkDate DESC
+    </select>
+    
+    <select id="findByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM check_ins
+        WHERE userId = #{userId}
+        ORDER BY checkDate DESC
+    </select>
+    
+    <select id="findByUserIdAndDate" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM check_ins
+        WHERE userId = #{userId} AND checkDate = #{checkDate}
+    </select>
+    
+    <select id="findByHabitIdAndDate" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM check_ins
+        WHERE habitId = #{habitId} AND checkDate = #{checkDate}
+    </select>
+    
+    <insert id="insert" parameterType="com.tencent.wxcloudrun.model.CheckIn" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO check_ins (habitId, userId, checkDate)
+        VALUES (#{habitId}, #{userId}, #{checkDate})
+    </insert>
+    
+    <delete id="deleteByHabitIdAndDate">
+        DELETE FROM check_ins
+        WHERE habitId = #{habitId} AND checkDate = #{checkDate}
+    </delete>
+    
+    <delete id="deleteByHabitId">
+        DELETE FROM check_ins
+        WHERE habitId = #{habitId}
+    </delete>
+    
+    <select id="findCheckDatesByHabitId" resultType="java.time.LocalDate">
+        SELECT checkDate
+        FROM check_ins
+        WHERE habitId = #{habitId}
+        ORDER BY checkDate DESC
+    </select>
+    
+    <select id="findByHabitIdAndMonth" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM check_ins
+        WHERE habitId = #{habitId}
+          AND YEAR(checkDate) = #{year}
+          AND MONTH(checkDate) = #{month}
+        ORDER BY checkDate
+    </select>
+    
+</mapper>

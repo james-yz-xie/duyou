@@ -1,0 +1,21 @@
+server:
+  port: 80
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_ADDRESS}/${MYSQL_DATABASE:springboot_demo}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  mvc:
+    view:
+      suffix: .html
+      prefix: /
+
+# 微信小程序配置
+wechat:
+  app-id: wx3393d384196a692d
+  app-secret: ${WECHAT_APP_SECRET:}
+
+mybatis:
+  mapper-locations: classpath*:mapper/*Mapper.xml
