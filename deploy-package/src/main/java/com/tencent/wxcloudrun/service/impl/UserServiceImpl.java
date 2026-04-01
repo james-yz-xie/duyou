@@ -1,16 +1,11 @@
 package com.tencent.wxcloudrun.service.impl;
 
-import com.tencent.wxcloudrun.dao.CheckInMapper;
-import com.tencent.wxcloudrun.dao.HabitMapper;
 import com.tencent.wxcloudrun.dao.UserMapper;
-import com.tencent.wxcloudrun.model.Habit;
 import com.tencent.wxcloudrun.model.User;
 import com.tencent.wxcloudrun.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,14 +15,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     
     private final UserMapper userMapper;
-    private final HabitMapper habitMapper;
-    private final CheckInMapper checkInMapper;
     
     @Autowired
-    public UserServiceImpl(UserMapper userMapper, HabitMapper habitMapper, CheckInMapper checkInMapper) {
+    public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
-        this.habitMapper = habitMapper;
-        this.checkInMapper = checkInMapper;
     }
     
     @Override
@@ -82,17 +73,6 @@ public class UserServiceImpl implements UserService {
         if (!userOpt.isPresent()) {
             throw new RuntimeException("用户不存在");
         }
-        
-        // 先删除用户的所有打卡记录（通过习惯）
-        List<Habit> habits = habitMapper.findByUserId(id);
-        for (Habit habit : habits) {
-            checkInMapper.deleteByHabitId(habit.getId());
-        }
-        
-        // 删除用户的所有习惯
-        habitMapper.deleteByUserId(id);
-        
-        // 最后删除用户
         userMapper.deleteById(id);
     }
 }
