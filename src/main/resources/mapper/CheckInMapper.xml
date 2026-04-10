@@ -71,4 +71,10 @@
         ORDER BY checkDate
     </select>
     
+    <select id="countTodayCheckIn" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM check_ins
+        WHERE habitId = #{habitId} AND DATE(checkDate) = #{checkDate}
+    </select>
+    
 </mapper>

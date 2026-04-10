@@ -58,4 +58,9 @@ public interface CheckInMapper {
      * 查询某习惯某月内的打卡记录
      */
     List<CheckIn> findByHabitIdAndMonth(@Param("habitId") Long habitId, @Param("year") int year, @Param("month") int month);
+    
+    /**
+     * 统计某习惯某天的打卡次数
+     */
+    Integer countTodayCheckIn(@Param("habitId") Long habitId, @Param("checkDate") String checkDate);
 }

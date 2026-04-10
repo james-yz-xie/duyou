@@ -32,7 +32,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private static final Logger logger = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
     
     // 订阅消息模板ID
-    private static final String TEMPLATE_ID = "R_Hj409ZFmfAArq2XV64wiYOgGfEEZF54UjSmApeNyc";
+    private static final String TEMPLATE_ID = "kBXtrNAwTn7m9oFnX464LTy_6KIvYdu6XaS42HXSONo";
     
     @Autowired
     private SubscriptionMapper subscriptionMapper;
@@ -104,7 +104,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         
         for (Subscription sub : subscriptions) {
             try {
-                logger.info("处理用户 {} 的订阅, openid={}", sub.getUserId(), sub.getOpenid());
+                logger.info("处理用户 {} 的订阅, openid={}, remainCount={}", sub.getUserId(), sub.getOpenid(), sub.getRemainCount());
                 
                 Optional<User> userOpt = userMapper.findById(sub.getUserId());
                 if (!userOpt.isPresent()) {
@@ -131,23 +131,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 int checkedCount = totalHabits - uncheckedHabits.size();
                 
                 String reminderText;
-                String progress;
-                
                 if (uncheckedHabits.isEmpty()) {
                     reminderText = "太棒了！今日已全部打卡，继续保持！";
-                    progress = "已完成" + totalHabits + "/" + totalHabits;
                 } else {
                     reminderText = "还有" + uncheckedHabits.size() + "个习惯未打卡，快来完成吧~";
-                    progress = "已完成" + checkedCount + "/" + totalHabits;
                 }
                 
-                Map<String, Object> data = new HashMap<>();
-                data.put("phrase1", createValueMap("习惯打卡"));
-                data.put("number2", createValueMap(String.valueOf(checkedCount)));
-                data.put("thing3", createValueMap(reminderText));
-                data.put("thing5", createValueMap(progress));
+                // 获取当前时间
+                String currentTime = java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
                 
-                logger.info("准备发送消息: openid={}, progress={}", sub.getOpenid(), progress);
+                Map<String, Object> data = new HashMap<>();
+                data.put("thing4", createValueMap(reminderText));
+                data.put("time3", createValueMap(currentTime));
+                
+                logger.info("准备发送消息: openid={}, reminderText={}", sub.getOpenid(), reminderText);
                 
                 boolean success = weChatService.sendSubscribeMessage(
                     sub.getOpenid(),

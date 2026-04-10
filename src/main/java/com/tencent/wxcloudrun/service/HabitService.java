@@ -37,6 +37,11 @@ public interface HabitService {
     void deleteHabit(Long id, Long userId);
     
     /**
+     * 清除用户所有习惯
+     */
+    void clearHabitsByUserId(Long userId);
+    
+    /**
      * 更新习惯统计数据
      */
     void updateHabitStats(Long habitId, int streak, int maxStreak, int totalCheckIns);

@@ -91,4 +91,19 @@ public class HabitController {
             return ApiResponse.error(e.getMessage());
         }
     }
+    
+    /**
+     * 清除用户所有习惯
+     */
+    @DeleteMapping("/clear")
+    public ApiResponse clearHabits(@RequestParam Long userId) {
+        logger.info("/api/habits/clear request, userId: {}", userId);
+        
+        try {
+            habitService.clearHabitsByUserId(userId);
+            return ApiResponse.ok("清除成功");
+        } catch (RuntimeException e) {
+            return ApiResponse.error(e.getMessage());
+        }
+    }
 }

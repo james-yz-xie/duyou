@@ -116,4 +116,19 @@ public class HabitServiceImpl implements HabitService {
             habitMapper.update(habit);
         }
     }
+    
+    @Override
+    @Transactional
+    public void clearHabitsByUserId(Long userId) {
+        // 获取用户所有习惯
+        List<Habit> habits = habitMapper.findByUserId(userId);
+        
+        // 删除每个习惯的打卡记录
+        for (Habit habit : habits) {
+            checkInMapper.deleteByHabitId(habit.getId());
+        }
+        
+        // 删除用户所有习惯
+        habitMapper.deleteByUserId(userId);
+    }
 }
